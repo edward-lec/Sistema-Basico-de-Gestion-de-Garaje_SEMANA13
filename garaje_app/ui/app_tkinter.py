@@ -1,107 +1,124 @@
-# Importación de la librería Tkinter para crear interfaces gráficas
+# =====================================================
+# IMPORTACIONES
+# =====================================================
+
+# Importamos la librería tkinter para crear la interfaz gráfica
 import tkinter as tk
 
-# Importación de ttk para usar componentes avanzados como tablas
+# Importamos ttk para usar componentes avanzados como tablas (Treeview)
 from tkinter import ttk
 
-# Importamos la clase Vehiculo del módulo modelos
+# Importamos la clase Vehiculo desde la carpeta modelos
 from modelos.vehiculo import Vehiculo
 
-# Importamos el servicio del garaje
-from servicios.garaje_servicio import GarajeServicio
 
+# =====================================================
+# CLASE DE LA INTERFAZ GRÁFICA
+# =====================================================
+# Esta clase se encarga de crear y manejar toda la interfaz
+# gráfica del sistema de gestión de garaje.
+# Aquí se crean los formularios, botones y la tabla donde
+# se muestran los vehículos registrados.
 
-# Clase que representa la aplicación gráfica
 class AppGaraje:
 
-    # Constructor de la aplicación
-    def __init__(self, root):
+    # -------------------------------------------------
+    # CONSTRUCTOR DE LA CLASE
+    # -------------------------------------------------
+    # El constructor se ejecuta cuando se crea un objeto
+    # de la clase AppGaraje. Aquí se inicializa la ventana
+    # principal y se crean los componentes de la interfaz.
 
-        # Ventana principal
-        self.root = root
+    def __init__(self, servicio):
 
-        # Título de la ventana
+        # Guardamos el servicio recibido para poder usar
+        # sus métodos (agregar y obtener vehículos)
+        self.servicio = servicio
+
+        # Crear la ventana principal de la aplicación
+        self.root = tk.Tk()
+
+        # Establecer el título de la ventana
         self.root.title("Sistema Básico de Gestión de Garaje")
 
-        # Instancia del servicio que manejará los vehículos
-        self.servicio = GarajeServicio()
-
-
-        # CREACIÓN DEL FORMULARIO
-
+        # -------------------------------------------------
+        # FORMULARIO DE INGRESO DE DATOS
+        # -------------------------------------------------
+        # Aquí se crean los campos donde el usuario
+        # ingresará la información del vehículo.
 
         # Etiqueta para el campo placa
-        tk.Label(root, text="Placa").grid(row=0, column=0)
+        tk.Label(self.root, text="Placa").grid(row=0, column=0)
 
         # Campo de texto para ingresar la placa
-        self.entry_placa = tk.Entry(root)
+        self.entry_placa = tk.Entry(self.root)
         self.entry_placa.grid(row=0, column=1)
 
-
         # Etiqueta para el campo marca
-        tk.Label(root, text="Marca").grid(row=1, column=0)
+        tk.Label(self.root, text="Marca").grid(row=1, column=0)
 
         # Campo de texto para ingresar la marca
-        self.entry_marca = tk.Entry(root)
+        self.entry_marca = tk.Entry(self.root)
         self.entry_marca.grid(row=1, column=1)
 
-
         # Etiqueta para el campo propietario
-        tk.Label(root, text="Propietario").grid(row=2, column=0)
+        tk.Label(self.root, text="Propietario").grid(row=2, column=0)
 
-        # Campo de texto para ingresar el propietario
-        self.entry_propietario = tk.Entry(root)
+        # Campo de texto para ingresar el nombre del propietario
+        self.entry_propietario = tk.Entry(self.root)
         self.entry_propietario.grid(row=2, column=1)
 
+        # -------------------------------------------------
+        # BOTONES DE ACCIÓN
+        # -------------------------------------------------
+        # Estos botones permiten interactuar con el sistema.
 
-
-        # BOTONES
-
-
-        # Botón para agregar un vehículo
+        # Botón para agregar un vehículo al sistema
         btn_agregar = tk.Button(
-            root,
+            self.root,
             text="Agregar Vehículo",
-            command=self.agregar_vehiculo   # Llama al método agregar_vehiculo
+            command=self.agregar_vehiculo  # Ejecuta el método agregar_vehiculo
         )
         btn_agregar.grid(row=3, column=0)
 
-
         # Botón para limpiar los campos del formulario
         btn_limpiar = tk.Button(
-            root,
+            self.root,
             text="Limpiar",
-            command=self.limpiar_campos
+            command=self.limpiar_campos  # Ejecuta el método limpiar_campos
         )
         btn_limpiar.grid(row=3, column=1)
 
+        # -------------------------------------------------
+        # TABLA PARA MOSTRAR LOS VEHÍCULOS
+        # -------------------------------------------------
+        # Se utiliza un Treeview para mostrar la lista de
+        # vehículos registrados dentro del garaje.
 
-
-        # TABLA PARA MOSTRAR VEHÍCULOS
-
-
-        # Creación de una tabla usando Treeview
         self.tabla = ttk.Treeview(
-            root,
+            self.root,
             columns=("placa", "marca", "propietario"),
-            show="headings"
+            show="headings"  # Oculta la columna inicial
         )
 
-        # Nombre de las columnas
+        # Definimos los encabezados de cada columna
         self.tabla.heading("placa", text="Placa")
         self.tabla.heading("marca", text="Marca")
         self.tabla.heading("propietario", text="Propietario")
 
-        # Posición de la tabla en la ventana
+        # Ubicamos la tabla en la ventana
         self.tabla.grid(row=4, column=0, columnspan=2)
 
 
-
+    # =====================================================
     # MÉTODO PARA AGREGAR VEHÍCULOS
+    # =====================================================
+    # Este método se ejecuta cuando el usuario presiona
+    # el botón "Agregar Vehículo".
 
     def agregar_vehiculo(self):
 
-        # Obtener los valores ingresados en los campos
+        # Obtener los datos ingresados por el usuario
         placa = self.entry_placa.get()
         marca = self.entry_marca.get()
         propietario = self.entry_propietario.get()
@@ -109,46 +126,69 @@ class AppGaraje:
         # Crear un objeto Vehiculo con los datos ingresados
         vehiculo = Vehiculo(placa, marca, propietario)
 
-        # Enviar el vehículo al servicio para guardarlo
+        # Enviar el vehículo al servicio para almacenarlo
         self.servicio.agregar_vehiculo(vehiculo)
 
         # Actualizar la tabla para mostrar el nuevo vehículo
         self.actualizar_tabla()
 
-        # Limpiar los campos después de agregar
+        # Limpiar los campos del formulario
         self.limpiar_campos()
 
 
-
+    # =====================================================
     # MÉTODO PARA ACTUALIZAR LA TABLA
+    # =====================================================
+    # Este método se encarga de refrescar la tabla y
+    # mostrar todos los vehículos registrados.
 
     def actualizar_tabla(self):
 
-        # Elimina todos los elementos actuales de la tabla
+        # Eliminar todas las filas actuales de la tabla
         for item in self.tabla.get_children():
             self.tabla.delete(item)
 
-        # Recorre todos los vehículos almacenados
+        # Recorrer la lista de vehículos almacenados
         for vehiculo in self.servicio.obtener_vehiculos():
 
-            # Inserta cada vehículo como una nueva fila
+            # Insertar cada vehículo como una nueva fila
             self.tabla.insert(
                 "",
                 "end",
-                values=(vehiculo.placa, vehiculo.marca, vehiculo.propietario)
+                values=(
+                    vehiculo.get_placa(),
+                    vehiculo.get_marca(),
+                    vehiculo.get_propietario()
+                )
             )
 
 
-
+    # =====================================================
     # MÉTODO PARA LIMPIAR LOS CAMPOS
+    # =====================================================
+    # Este método elimina el contenido de los campos
+    # del formulario para permitir ingresar nuevos datos.
 
     def limpiar_campos(self):
 
-        # Borra el contenido del campo placa
+        # Borrar el texto del campo placa
         self.entry_placa.delete(0, tk.END)
 
-        # Borra el contenido del campo marca
+        # Borrar el texto del campo marca
         self.entry_marca.delete(0, tk.END)
 
-        # Borra el contenido del campo propietario
+        # Borrar el texto del campo propietario
         self.entry_propietario.delete(0, tk.END)
+
+
+    # =====================================================
+    # MÉTODO PARA EJECUTAR LA APLICACIÓN
+    # =====================================================
+    # Este método inicia el bucle principal de Tkinter,
+    # lo que permite que la interfaz gráfica se mantenga
+    # activa y responda a las acciones del usuario.
+
+    def run(self):
+
+        # Inicia el ciclo de ejecución de la interfaz
+        self.root.mainloop()

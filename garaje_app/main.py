@@ -1,23 +1,23 @@
-## Importamos la librería tkinter para crear la ventana
-import tkinter as tk
+# Importamos el servicio del garaje
+from servicios.garaje_servicio import GarajeServicio
 
-# Importamos la clase AppGaraje desde la carpeta ui
+# Importamos la interfaz gráfica
 from ui.app_tkinter import AppGaraje
 
 
-# Función principal que inicia la aplicación
+# Función principal del programa
 def main():
 
-    # Crear la ventana principal del programa
-    root = tk.Tk()
+    # Crear el servicio que manejará los vehículos
+    servicio = GarajeServicio()
 
-    # Crear la aplicación pasando la ventana como parámetro
-    app = AppGaraje(root)
+    # Crear la aplicación y pasar el servicio
+    app = AppGaraje(servicio)
 
-    # Ejecutar el bucle principal de la interfaz gráfica
-    root.mainloop()
+    # Ejecutar la aplicación
+    app.run()
 
 
-# Verifica que este archivo se está ejecutando directamente
+# Punto de inicio del programa
 if __name__ == "__main__":
     main()
