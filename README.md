@@ -21,7 +21,7 @@ Aplicar conceptos de programación orientada a objetos.
 
 Implementar una arquitectura con separación lógica entre modelo, servicio e interfaz gráfica.
 
-**Estructura del Proyecto**
+Estructura del Proyecto
 
 El sistema se encuentra organizado en módulos para mantener una separación lógica entre las diferentes responsabilidades del programa.
 
@@ -37,7 +37,6 @@ garaje_app
 │   └── app_tkinter.py
 │
 └── main.py
-
 **Descripción de cada módulo**
 
 modelos
