@@ -37,7 +37,8 @@ garaje_app
 │   └── app_tkinter.py
 │
 └── main.py
-Descripción de cada módulo
+
+**Descripción de cada módulo**
 
 modelos
 
